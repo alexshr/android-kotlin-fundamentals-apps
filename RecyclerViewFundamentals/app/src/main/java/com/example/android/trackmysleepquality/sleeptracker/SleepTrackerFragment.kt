@@ -28,7 +28,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
-import com.google.android.material.snackbar.Snackbar
+import org.jetbrains.anko.design.snackbar
 
 /**
  * A fragment with buttons to record start and end times for sleep, which are saved in
@@ -82,19 +82,9 @@ class SleepTrackerFragment : Fragment() {
         // This is necessary so that the binding can observe LiveData updates.
         binding.setLifecycleOwner(this)
 
-        // Add an Observer on the state variable for showing a Snackbar message
-        // when the CLEAR button is pressed.
+        // Observe snackbar event
         sleepTrackerViewModel.showSnackBarEvent.observe(this, Observer {
-            if (it == true) { // Observed state is true.
-                Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
-                        getString(R.string.cleared_message),
-                        Snackbar.LENGTH_SHORT // How long to display the message.
-                ).show()
-                // Reset state to make sure the toast is only shown once, even if the device
-                // has a configuration change.
-                sleepTrackerViewModel.doneShowingSnackbar()
-            }
+            binding.clearButton.snackbar(it)
         })
 
         // Add an Observer on the state variable for Navigating when STOP button is pressed.
