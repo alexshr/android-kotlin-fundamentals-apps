@@ -21,7 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
 /**
@@ -38,9 +38,16 @@ class DetailFragment : Fragment() {
         binding.setLifecycleOwner(this)
 
         val marsProperty = DetailFragmentArgs.fromBundle(arguments!!).selectedProperty
-        val viewModelFactory = DetailViewModelFactory(marsProperty, application)
+
+        // Get a reference to the ViewModel scoped to this Fragment (fragment-ktx)
+        //https://developer.android.com/reference/kotlin/androidx/fragment/app/package-summary#viewmodels
+        val viewModel by viewModels<DetailViewModel> {DetailViewModelFactory(marsProperty, application)}
+
+        binding.viewModel=viewModel
+
+        /*val viewModelFactory = DetailViewModelFactory(marsProperty, application)
         binding.viewModel = ViewModelProviders.of(
-                this, viewModelFactory).get(DetailViewModel::class.java)
+                this, viewModelFactory).get(DetailViewModel::class.java)*/
 
         return binding.root
     }
