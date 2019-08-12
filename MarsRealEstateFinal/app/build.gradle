@@ -90,4 +90,7 @@ dependencies {
 
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$version_recyclerview"
+
+    //https://github.com/hadilq/LiveEvent
+    implementation "com.github.hadilq.liveevent:liveevent:1.0.1"
 }

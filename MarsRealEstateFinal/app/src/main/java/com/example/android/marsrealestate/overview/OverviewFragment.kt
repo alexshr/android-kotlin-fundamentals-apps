@@ -42,7 +42,15 @@ class OverviewFragment : Fragment() {
         ViewModelProviders.of(this).get(OverviewViewModel::class.java)
     }*/
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+        // Observe the navigateToSelectedProperty LiveData and Navigate when it isn't null
+        // it was moved from onCreateView to avoid re-subscribing
+        viewModel.navigateToSelectedProperty.observe(this, Observer {
+            findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
+        })
+    }
 
     /**
      * Inflates the layout with Data Binding, sets its lifecycle owner to the OverviewFragment
@@ -63,18 +71,6 @@ class OverviewFragment : Fragment() {
         // tells the viewModel when our property is clicked
         binding.photosGrid.adapter = PhotoGridAdapter(PhotoGridAdapter.OnClickListener {
             viewModel.displayPropertyDetails(it)
-        })
-
-        // Observe the navigateToSelectedProperty LiveData and Navigate when it isn't null
-        // After navigating, call displayPropertyDetailsComplete() so that the ViewModel is ready
-        // for another navigation event.
-        viewModel.navigateToSelectedProperty.observe(this, Observer {
-            if ( null != it ) {
-                // Must find the NavController from the Fragment
-                this.findNavController().navigate(OverviewFragmentDirections.actionShowDetail(it))
-                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
-                viewModel.displayPropertyDetailsComplete()
-            }
         })
 
         setHasOptionsMenu(true)

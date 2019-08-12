@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
 import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
+import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.launch
 
 enum class MarsApiStatus { LOADING, ERROR, DONE }
@@ -48,10 +49,14 @@ class OverviewViewModel : ViewModel() {
     val properties: LiveData<List<MarsProperty>>
         get() = _properties
 
-    // LiveData to handle navigation to the selected property
-    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
-    val navigateToSelectedProperty: LiveData<MarsProperty>
-        get() = _navigateToSelectedProperty
+
+    /**
+     * navigation LiveEvent
+     * (see https://github.com/hadilq/LiveEvent)
+     * This is private because we don't want to expose setting this value to the Fragment.
+     */
+    private val _navigateToSelectedProperty = LiveEvent<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty> = _navigateToSelectedProperty
 
     /**
      * Call getMarsRealEstateProperties() on init so we can display status immediately.
@@ -99,12 +104,5 @@ class OverviewViewModel : ViewModel() {
      */
     fun displayPropertyDetails(marsProperty: MarsProperty) {
         _navigateToSelectedProperty.value = marsProperty
-    }
-
-    /**
-     * After the navigation has taken place, make sure navigateToSelectedProperty is set to null
-     */
-    fun displayPropertyDetailsComplete() {
-        _navigateToSelectedProperty.value = null
     }
 }
