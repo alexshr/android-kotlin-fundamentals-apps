@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
 /**
@@ -37,11 +38,12 @@ class DetailFragment : Fragment() {
         val binding = FragmentDetailBinding.inflate(inflater)
         binding.setLifecycleOwner(this)
 
-        val marsProperty = DetailFragmentArgs.fromBundle(arguments!!).selectedProperty
+        //using ktx for args https://developer.android.com/kotlin/ktx#navigation
+        val args by navArgs<DetailFragmentArgs>()
 
         // Get a reference to the ViewModel scoped to this Fragment (fragment-ktx)
         //https://developer.android.com/reference/kotlin/androidx/fragment/app/package-summary#viewmodels
-        val viewModel by viewModels<DetailViewModel> {DetailViewModelFactory(marsProperty, application)}
+        val viewModel by viewModels<DetailViewModel> {DetailViewModelFactory(args.selectedProperty, application)}
 
         binding.viewModel=viewModel
 
