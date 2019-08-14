@@ -26,8 +26,8 @@ import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.devbyteviewer.R
@@ -35,24 +35,18 @@ import com.example.android.devbyteviewer.databinding.DevbyteItemBinding
 import com.example.android.devbyteviewer.databinding.FragmentDevByteBinding
 import com.example.android.devbyteviewer.domain.DevByteVideo
 import com.example.android.devbyteviewer.viewmodels.DevByteViewModel
+import com.wada811.databinding.dataBinding
 
 /**
  * Show a list of DevBytes on screen.
  */
 class DevByteFragment : Fragment() {
 
-    /**
-     * One way to delay creation of the viewModel until an appropriate lifecycle method is to use
-     * lazy. This requires that viewModel not be referenced before onActivityCreated, which we
-     * do in this Fragment.
-     */
-    private val viewModel: DevByteViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProviders.of(this, DevByteViewModel.Factory(activity.application))
-                .get(DevByteViewModel::class.java)
-    }
+    // Get a reference to the ViewModel scoped to this Fragment (fragment-ktx)
+    val viewModel by viewModels<DevByteViewModel> { DevByteViewModel.Factory(activity!!.application) }
+
+    //https://medium.com/databinding-ktx/android-databinding-ktx-2-0-0-released-dbcf8b06346a
+    private val binding: FragmentDevByteBinding by dataBinding(R.layout.fragment_dev_byte)
 
     /**
      * RecyclerView Adapter for converting a list of Video to cards.
@@ -92,13 +86,16 @@ class DevByteFragment : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding: FragmentDevByteBinding = DataBindingUtil.inflate(
+
+
+
+        /*val binding: FragmentDevByteBinding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_dev_byte,
                 container,
                 false)
         // Set the lifecycleOwner so DataBinding can observe LiveData
-        binding.setLifecycleOwner(viewLifecycleOwner)
+        binding.setLifecycleOwner(viewLifecycleOwner)*/
 
         binding.viewModel = viewModel
 
@@ -111,7 +108,7 @@ class DevByteFragment : Fragment() {
 
             // Try to generate a direct intent to the YouTube app
             var intent = Intent(Intent.ACTION_VIEW, it.launchUri)
-            if(intent.resolveActivity(packageManager) == null) {
+            if (intent.resolveActivity(packageManager) == null) {
                 // YouTube app isn't found, use the web url
                 intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.url))
             }
@@ -137,7 +134,7 @@ class DevByteFragment : Fragment() {
      * Method for displaying a Toast error message for network errors.
      */
     private fun onNetworkError() {
-        if(!viewModel.isNetworkErrorShown.value!!) {
+        if (!viewModel.isNetworkErrorShown.value!!) {
             Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show()
             viewModel.onNetworkErrorShown()
         }
