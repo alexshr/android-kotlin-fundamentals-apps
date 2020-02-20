@@ -16,13 +16,10 @@
 
 package com.example.android.diceroller
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import java.util.*
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * DiceRoller demonstrates simple interactivity in an Android app.
@@ -42,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         // listener to it.
         val rollButton: Button = findViewById(R.id.roll_button)
         rollButton.setOnClickListener { rollDice() }
+        val clearButton: Button = findViewById(R.id.clear_button)
+        clearButton.setOnClickListener { clearDice() }
         diceImage = findViewById(R.id.dice_image)
         diceImage2 = findViewById(R.id.dice_image2)
     }
@@ -52,6 +51,11 @@ class MainActivity : AppCompatActivity() {
     private fun rollDice() {
         diceImage.setImageResource(getRandomDiceImage())
         diceImage2.setImageResource(getRandomDiceImage())
+    }
+
+    private fun clearDice() {
+        diceImage.setImageResource(R.drawable.empty_dice)
+        diceImage2.setImageResource(R.drawable.empty_dice)
     }
 
     private fun getRandomDiceImage() : Int {
