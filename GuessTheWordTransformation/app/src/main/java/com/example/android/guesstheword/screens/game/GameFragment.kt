@@ -24,8 +24,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
@@ -37,7 +37,8 @@ class GameFragment : Fragment() {
 
     private lateinit var binding: GameFragmentBinding
 
-    private lateinit var viewModel: GameViewModel
+    //private lateinit var viewModel: GameViewModel
+    private val viewModel by viewModels<GameViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -51,7 +52,9 @@ class GameFragment : Fragment() {
         )
         Log.i("GameFragment", "Called ViewModelProviders.of")
 
-        viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+        //viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
+
+        //val viewModel by viewModels<GameViewModel>()
 
         // Set the viewModel for databinding - this allows the bound layout access
         // to all the data in the VieWModel
@@ -63,7 +66,7 @@ class GameFragment : Fragment() {
 
 
         // Observer for the Game finished event
-        viewModel.eventGameFinish.observe(this, Observer<Boolean> { hasFinished ->
+        viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer<Boolean> { hasFinished ->
             if (hasFinished) gameFinished()
         })
 
