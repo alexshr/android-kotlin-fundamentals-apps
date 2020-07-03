@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
@@ -50,11 +50,14 @@ class SleepTrackerFragment : Fragment() {
 
         val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
 
-        val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
+        /* val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
+         val sleepTrackerViewModel =
+                 ViewModelProviders.of(
+                         this, viewModelFactory).get(SleepTrackerViewModel::class.java)*/
 
-        val sleepTrackerViewModel =
-                ViewModelProviders.of(
-                        this, viewModelFactory).get(SleepTrackerViewModel::class.java)
+        //alexshr
+        val sleepTrackerViewModel by viewModels<SleepTrackerViewModel>(
+                factoryProducer = { SleepTrackerViewModelFactory(dataSource, application) })
 
         binding.setLifecycleOwner(this)
 
