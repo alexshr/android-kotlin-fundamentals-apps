@@ -17,16 +17,12 @@
 package com.example.android.trackmysleepquality.sleepdetail
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for SleepQualityFragment.
@@ -63,7 +59,7 @@ class SleepDetailViewModel(
      * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
      * the [Fragment]
      */
-    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    private val _navigateToSleepTracker = LiveEvent<Boolean?>()
 
     /**
      * When true immediately navigate back to the [SleepTrackerFragment]
@@ -79,13 +75,6 @@ class SleepDetailViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-    /**
-     * Call this immediately after navigating to [SleepTrackerFragment]
-     */
-    fun doneNavigating() {
-        _navigateToSleepTracker.value = null
     }
 
     fun onClose() {
