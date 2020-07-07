@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
  *
  * @param sleepNightKey The key of the current night we are working on.
  */
+@Suppress("KDocUnresolvedReference")
 class SleepQualityViewModel(
         private val sleepNightKey: Long = 0L,
         dataSource: SleepDatabaseDao) : ViewModel() {
@@ -81,13 +82,6 @@ class SleepQualityViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-    /**
-     * Call this immediately after navigating to [SleepTrackerFragment]
-     */
-    fun doneNavigating() {
-        _navigateToSleepTracker.value = null
     }
 
     /**

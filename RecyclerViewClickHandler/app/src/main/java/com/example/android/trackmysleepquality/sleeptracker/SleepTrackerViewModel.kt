@@ -16,26 +16,21 @@
 
 package com.example.android.trackmysleepquality.sleeptracker
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
-import com.example.android.trackmysleepquality.formatNights
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.hadilq.liveevent.LiveEvent
+import kotlinx.coroutines.*
 
 /**
  * ViewModel for SleepTrackerFragment.
  */
+@Suppress("KDocUnresolvedReference")
 class SleepTrackerViewModel(
-        dataSource: SleepDatabaseDao,
-        application: Application) : ViewModel() {
+        dataSource: SleepDatabaseDao) : ViewModel() {
 
     /**
      * Hold a reference to SleepDatabase via SleepDatabaseDao.
@@ -66,13 +61,6 @@ class SleepTrackerViewModel(
     val nights = database.getAllNights()
 
     /**
-     * Converted nights to Spanned for displaying.
-     */
-    val nightsString = Transformations.map(nights) { nights ->
-        formatNights(nights, application.resources)
-    }
-
-    /**
      * If tonight has not been set, then the START button should be visible.
      */
     val startButtonVisible = Transformations.map(tonight) {
@@ -98,7 +86,7 @@ class SleepTrackerViewModel(
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private var _showSnackbarEvent = MutableLiveData<Boolean?>()
+    private var _showSnackbarEvent = LiveEvent<Boolean?>()
 
     /**
      * If this is true, immediately `show()` a toast and call `doneShowingSnackbar()`.
@@ -111,7 +99,7 @@ class SleepTrackerViewModel(
      *
      * This is private because we don't want to expose setting this value to the Fragment.
      */
-    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+    private val _navigateToSleepQuality: MutableLiveData<SleepNight> = MutableLiveData<SleepNight>()
 
     /**
      * If this is non-null, immediately navigate to [SleepQualityFragment] and call [doneNavigating]
@@ -119,25 +107,6 @@ class SleepTrackerViewModel(
     val navigateToSleepQuality: LiveData<SleepNight>
         get() = _navigateToSleepQuality
 
-    /**
-     * Call this immediately after calling `show()` on a toast.
-     *
-     * It will clear the toast request, so if the user rotates their phone it won't show a duplicate
-     * toast.
-     */
-    fun doneShowingSnackbar() {
-        _showSnackbarEvent.value = null
-    }
-
-    /**
-     * Call this immediately after navigating to [SleepQualityFragment]
-     *
-     * It will clear the navigation request, so if the user rotates their phone it won't navigate
-     * twice.
-     */
-    fun doneNavigating() {
-        _navigateToSleepQuality.value = null
-    }
 
     /**
      * Navigation for the SleepDetail fragment.

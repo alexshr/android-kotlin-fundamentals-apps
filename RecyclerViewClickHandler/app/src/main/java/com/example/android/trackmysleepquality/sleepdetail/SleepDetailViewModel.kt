@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +34,7 @@ import kotlinx.coroutines.withContext
  *
  * @param sleepNightKey The key of the current night we are working on.
  */
+@Suppress("KDocUnresolvedReference")
 class SleepDetailViewModel(
         private val sleepNightKey: Long = 0L,
         dataSource: SleepDatabaseDao) : ViewModel() {
@@ -64,7 +66,7 @@ class SleepDetailViewModel(
      * This is `private` because we don't want to expose the ability to set [MutableLiveData] to
      * the [Fragment]
      */
-    private val _navigateToSleepTracker = MutableLiveData<Boolean?>()
+    private val _navigateToSleepTracker = LiveEvent<Boolean?>()
 
     /**
      * When true immediately navigate back to the [SleepTrackerFragment]
@@ -80,14 +82,6 @@ class SleepDetailViewModel(
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-
-    /**
-     * Call this immediately after navigating to [SleepTrackerFragment]
-     */
-    fun doneNavigating() {
-        _navigateToSleepTracker.value = null
     }
 
     fun onClose() {
