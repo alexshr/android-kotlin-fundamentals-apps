@@ -33,7 +33,7 @@ import com.example.android.marsrealestate.network.MarsApiFilter
 class OverviewFragment : Fragment() {
 
     // Get a reference to the ViewModel scoped to this Fragment (fragment-ktx)
-    val viewModel by viewModels<OverviewViewModel>()
+    private val viewModel by viewModels<OverviewViewModel>()
 
     /**
      * Lazily initialize our [OverviewViewModel].
@@ -62,7 +62,7 @@ class OverviewFragment : Fragment() {
         //val binding = GridViewItemBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         // Giving the binding access to the OverviewViewModel
         binding.viewModel = viewModel

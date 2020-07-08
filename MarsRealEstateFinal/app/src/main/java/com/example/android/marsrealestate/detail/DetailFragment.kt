@@ -43,13 +43,9 @@ class DetailFragment : Fragment() {
 
         // Get a reference to the ViewModel scoped to this Fragment (fragment-ktx)
         //https://developer.android.com/reference/kotlin/androidx/fragment/app/package-summary#viewmodels
-        val viewModel by viewModels<DetailViewModel> {DetailViewModelFactory(args.selectedProperty, application)}
+        val viewModel by viewModels<DetailViewModel> { DetailViewModelFactory(args.selectedProperty, application) }
 
-        binding.viewModel=viewModel
-
-        /*val viewModelFactory = DetailViewModelFactory(marsProperty, application)
-        binding.viewModel = ViewModelProviders.of(
-                this, viewModelFactory).get(DetailViewModel::class.java)*/
+        binding.viewModel = viewModel
 
         return binding.root
     }

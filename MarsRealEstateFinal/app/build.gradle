@@ -22,14 +22,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion 28
-    dataBinding {
-        enabled = true
-    }
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.example.android.marsrealestate"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,8 +41,16 @@ android {
         experimental = true
     }
 
+    // Enables data binding.
+    android.buildFeatures.dataBinding = true
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
@@ -92,5 +97,5 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$version_recyclerview"
 
     //https://github.com/hadilq/LiveEvent
-    implementation "com.github.hadilq.liveevent:liveevent:1.0.1"
+    implementation 'com.github.hadilq.liveevent:liveevent:1.2.0'
 }
